@@ -26,13 +26,7 @@ class UserManager(BaseUserManager):
 
         return self.create_user(password=password,**extra) 
     
-class Key(models.Model):
-    id = models.BigIntegerField(primary_key=True)
-    otp = models.IntegerField(null=True,blank=True,unique=True)
-    key = models.CharField(null=True,blank=True, max_length=40)
-    expiry = models.DecimalField(null=True,blank=True,decimal_places=9,max_digits=20)
-    created = models.DateTimeField(auto_now_add=True) 
-    
+
 class User(AbstractUser):
     username = None
     id = models.BigAutoField(primary_key=True)

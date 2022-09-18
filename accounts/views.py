@@ -4,11 +4,8 @@ from django.contrib.auth.decorators import login_required
 # from accounts.models import
 from django.contrib import messages
 from django.contrib.auth import logout, login, authenticate
-from accounts.models import Key,User
+from accounts.models import User
 from accounts.verify import get_otp, send_otp
-from time import perf_counter
-from threading import Thread
-from uuid import uuid4
 # Create your views here.
 
 def loginUser(request):
@@ -96,9 +93,10 @@ def forgot(request):
             OTP = get_otp()
             request.session['otp'] = OTP
             request.session["email"] = email
-            var = Thread(target=send_otp, args=(
-                email, OTP, f"{user.first_name} {user.last_name}"), daemon=True)
-            var.start()
+            # var = Thread(target=send_otp, args=(
+            #     email, OTP, f"{user.first_name} {user.last_name}"), daemon=True)
+            # var.start()
+            send_otp(email,OTP,f"{user.first_name} {user.last_name}")
             return render(request,"accounts/verify.html")
         except :
             messages.error(request,"User with the Email does not exists!")
@@ -156,9 +154,10 @@ def change_email(request):
         request.session['otp'] = OTP
         request.session["email"] = n_email
         request.session["id"] = user.id
-        var = Thread(target=send_otp, args=(
-            n_email, OTP, f"{user.first_name} {user.last_name}"), daemon=True)
-        var.start()
+        # var = Thread(target=send_otp, args=(
+        #     n_email, OTP, f"{user.first_name} {user.last_name}"), daemon=True)
+        # var.start()
+        send_otp(n_email,OTP,f"{user.first_name} {user.last_name}")
         return render(request,"accounts/verify.html",{"var":True})
     elif request.method == "POST" and "verify" in request.POST:
         otp = request.POST.get("otp")

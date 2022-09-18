@@ -5,9 +5,9 @@ from pathlib import Path
 from rest_framework.decorators import api_view
 from django.contrib.auth.decorators import login_required
 from rest_framework.response import Response
-from rest_framework import exceptions, status
+from rest_framework import status
 from uuid import uuid4
-from accounts.models import User
+# from accounts.models import User
 # Create your views here.
 
 def isAuthenticated(request):
