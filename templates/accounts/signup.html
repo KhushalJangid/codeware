@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+{% load static %}
+
+<head>
+   <meta charset="UTF-8">
+   <meta http-equiv="X-UA-Compatible" content="IE=edge">
+   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+   <link rel="stylesheet" href="{% static 'css/login.css'%}">
+</head>
+
+<body>
+   <div class="wrapper">
+      <div class="title-text">
+         <div class="title signup">
+            Signup Form
+         </div>
+      </div>
+      <div class="form-container">
+         <div class="slide-controls">
+            <a class="w-50" href="/accounts/login"><label for="login"
+                  class="slide login radio-inactive">Login</label></a>
+            <label for="signup" class="slide signup radio-active">Signup</label>
+         </div>
+         <div class="form-inner">
+            <form method="post" class="signup">
+               {%csrf_token%}
+               <div class="field">
+                  <input type="text" name="name" placeholder="Your Name" required>
+               </div>
+               <div class="field">
+                  <input type="text" name="email" placeholder="Email Address" required>
+               </div>
+               <div class="field">
+                  <input type="password" name="password" id="password" placeholder="Password" required>
+               </div>
+               <div class="field">
+                  <input type="password" name="password0" id="password0" placeholder="Confirm password" required>
+               </div>
+               <div class="field-btn mt-2">
+                  <input type="checkbox" id="showPassword" onchange="showPass(this)" unchecked>
+                  <label for="showPassword" style="cursor:pointer;">Show Password </label>
+
+               </div>
+               <div class="field btn">
+                  <input class="btn-layer" type="submit" name="signup" value="Signup">
+               </div>
+            </form>
+         </div>
+      </div>
+   </div>
+   <script>
+      function showPass(checkbox) {
+         if (checkbox.checked == true) {
+            document.getElementById("password").type = "text"
+            document.getElementById("password0").type = "text"
+         } else {
+            document.getElementById("password").type = "password"
+            document.getElementById("password0").type = "password"
+         }
+      }
+   </script>
+</body>
+
+</html>

@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+{% load static %}
+
+<head>
+   <meta charset="UTF-8">
+   <meta http-equiv="X-UA-Compatible" content="IE=edge">
+   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+   <link rel="stylesheet" href="{% static 'css/login.css'%}">
+   <link rel="stylesheet" href="{% static 'css/snackbar.css'%}">
+</head>
+
+<body>
+   <div class="wrapper">
+      <div class="title-text">
+         <div class="title login">
+            Login Form
+         </div>
+      </div>
+      <div class="form-container">
+         <div class="slide-controls">
+            <label for="login" class="slide login radio-active">Login</label>
+            <a class="w-100" href="/accounts/signup" style="width: 50%; text-align: center;">
+               <label for="signup" class="slide signup radio-inactive">Signup</label>
+            </a>
+         </div>
+         <div class="form-inner">
+            <form method="post" class="login">
+               {% csrf_token %}
+               <div class="field">
+                  <input id="inp" type="text" name="email" placeholder="Email Address" required>
+               </div>
+               <div class="field">
+                  <input type="password" name="password" id="password" placeholder="Password" required>
+               </div>
+               <div class="field-btn" style="margin-top:15px;">
+                  <input type="checkbox" id="showPassword" onchange="showPass(this)" unchecked>
+                  <label for="showPassword" style="cursor:pointer;">Show Password</label>
+
+               </div>
+               <div class="pass-link">
+                  <a href="/account/forgot-password">Forgot password?</a>
+               </div>
+               <div class="field btn">
+                  <input class="btn-layer" type="submit" name="login" value="Login">
+               </div>
+            </form>
+         </div>
+      </div>
+   </div>
+   {%if messages%}
+   {%for message in messages%}
+   <div id="snackbar" class="{{message.tags}}">
+      {{message}}
+      <span class="btn-outline-{{message.tags}} btn-sm closebtn"
+         onclick="this.parentElement.style.display='none';">&times;</span>
+   </div>
+   {%endfor%}
+   {%endif%}
+   <script>
+      function showPass(checkbox) {
+         if (checkbox.checked == true) {
+            document.getElementById("password").type = "text"
+         } else {
+            document.getElementById("password").type = "password"
+         }
+      }
+   </script>
+</body>
+
+</html>

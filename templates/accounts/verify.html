@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+{% load static %}
+
+<head>
+   <meta charset="UTF-8">
+   <meta http-equiv="X-UA-Compatible" content="IE=edge">
+   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+   <link rel="stylesheet" href="{% static 'css/login.css'%}">
+</head>
+
+<body>
+   <div class="wrapper">
+      <div class="title-text">
+         <div class="title login">
+            OTP Verification
+         </div>
+      </div>
+      <div class="form-container">
+         <div class="form-inner" style="flex-direction:column;">
+            <div>
+               <p>A Verification Code has been sent to your email.Please check your email and enter the Code to Verify.
+               </p>
+            </div>
+            <form method="post" class="login">
+               <!-- {% csrf_token %} -->
+               <div class="field">
+                  <input type="text" name="otp" placeholder="" required>
+               </div>
+               <div class="field btn">
+                  <div class="btn-layer"></div>
+                  <input type="submit" name="verify" value="Verify">
+               </div>
+            </form>
+         </div>
+      </div>
+   </div>
+</body>
+
+</html>

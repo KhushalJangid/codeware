@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+{% load static %}
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  <link rel="stylesheet" href="{%static 'css/style.css'%}">
+
+  <title>Codeware - Untitled.py</title>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/6.65.7/codemirror.min.js"
+    integrity="sha512-8RnEqURPUc5aqFEN04aQEiPlSAdE0jlFS/9iGgUyNtwFnSKCXhmB6ZTNl7LnDtDWKabJIASzXrzD0K+LYexU9g=="
+    crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/6.65.7/codemirror.min.css"
+    integrity="sha512-uf06llspW44/LZpHzHT6qBOIVODjWtv4MxCricRxkzvopAlSWnTf6hpZTFxuuZcuNE9CBQhqE0Seu1CoRk84nQ=="
+    crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/6.65.7/theme/dracula.min.css"
+    integrity="sha512-gFMl3u9d0xt3WR8ZeW05MWm3yZ+ZfgsBVXLSOiFz2xeVrZ8Neg0+V1kkRIo9LikyA/T9HuS91kDfc2XWse0K0A=="
+    crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/6.65.7/mode/python/python.min.js"
+    integrity="sha512-2M0GdbU5OxkGYMhakED69bw0c1pW3Nb0PeF3+9d+SnwN1ryPx3wiDdNqK3gSM7KAU/pEV+2tFJFbMKjKAahOkQ=="
+    crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+</head>
+
+<body>
+  <form action="/compile" method="post">
+    {% csrf_token %}
+    <header>
+      <div id="logo-container">
+        <img src="{%static 'assets/logo.svg'%}" id="logo">
+      </div>
+      <button id="recents-btn" class="btn-type1" width="6rem">Recents</button>
+      <div id="filename">Untitled.py</div>
+
+      <select name="lang" id="filechooser" class="btn-type1">
+        <option value="py" default>Python</option>
+        <option value="js">Javascript</option>
+        <option value="cpp">C++</option>
+      </select>
+
+      <button class="circular-btn" id="run-btn" type="button"><i class="fa fa-play"></i></button>
+      <button class="circular-btn"><i class="fa fa-floppy-o"></i></button>
+      <button class="circular-btn"><i class="fa fa-upload"></i></button>
+
+    </header>
+    <main>
+      <div id="editor_wrapper">
+        <textarea name="code" id="editor">print("hello world")</textarea>
+      </div>
+
+      <script>
+        var editor = CodeMirror.fromTextArea(document.getElementById("editor"), {
+          mode: "python",
+          theme: "dracula",
+          lineNumbers: true,
+        });
+      </script>
+    </main>
+  </form>
+  <aside id="terminal">
+    <div id="inputs-container">
+      <div class="panel-title">Inputs</div>
+      <textarea name="stdin" id="inputs"></textarea>
+    </div>
+    <div id="console-container">
+      <div class="panel-title">Console</div>
+      <div id="console"></div>
+    </div>
+  </aside>
+  <footer></footer>
+</body>
+
+<script>
+  submit_btn = document.getElementById('run-btn');
+  submit_btn.addEventListener("click", function () {
+    var csrf = document.getElementsByName("csrfmiddlewaretoken")[0];
+    csrf = csrf.value;
+    data = new FormData();
+    data.append('lang', document.getElementById('filechooser').value);
+    data.append('stdin', document.getElementById('inputs').value);
+    data.append('code', editor.getValue());
+    // console.log(csrf);
+    var xhr = new XMLHttpRequest();
+    xhr.open('POST', '/compile', true);
+    xhr.setRequestHeader('X-CSRFToken', csrf);
+    xhr.getResponseHeader('Content-type', 'application/json');
+    xhr.onload = function () {
+      if (this.status === 200) {
+        var text_ = xhr.responseText;
+        text_ = text_.slice(1, -1);
+        text_ = text_.replaceAll(String.raw `\n`, "<br>");
+        text_ = text_.replace(String.raw `\t`, "&nbsp;&nbsp;");
+        document.getElementById('console').innerHTML = text_;
+      } else {
+        console.log("Some error occured");
+      }
+    }
+    xhr.send(data);
+    console.log(data.get('code'));
+    return xhr.responseText;
+  })
+</script>
+
+</html>
