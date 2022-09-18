@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+{% load static %}
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="{% static 'css/login.css'%}">
+</head>
+
+<body>
+    <div class="wrapper">
+        <div class="title-text">
+            <div class="title login">
+                Forgot Password
+            </div>
+        </div>
+        <div class="form-container">
+            <div class="form-inner flex-column">
+                <h6 class="my-4">A Verification Code will be sent to this email.
+                    Please check your email and enter the Code to Verify.
+                </h6>
+                <form method="post" class="login">
+                    {% csrf_token %}
+                    <div class="field">
+                        <input type="text" name="email" placeholder="email" required>
+                    </div>
+                    <div class="field btn">
+                        <div class="btn-layer"></div>
+                        <input type="submit" name="send-mail" value="Send Email">
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

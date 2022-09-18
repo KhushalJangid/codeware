@@ -1,0 +1,323 @@
+*{
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+    font-family: inherit;
+}
+:root{
+    --border-gray: rgba(100, 100, 100, 0.3);
+    --code-bg: rgb(25, 30, 35);
+    --dark-workspace-bg: rgb(17, 17, 24);
+    --dark-workspace-bg-translucent: rgba(17, 17, 24, 0.5);
+    --accent-blue-dark: rgb(65, 157, 255);
+    --accent-green: rgb(34, 193, 74);
+    --accent-green-translucent: rgba(34, 193, 74, 0.2);
+    --mode-color: rgb(0,0,0);
+
+    --roboto: Arial, Helvetica, sans-serif;
+}
+html, body{
+    height: 100%;
+    width: 100%;
+    font-family: Arial, Helvetica, sans-serif;
+    color: white;
+}
+a{
+    text-decoration: none;
+}
+a:hover{
+    text-decoration: underline;
+}
+.btn-type1{
+    background: none;
+    color: var(--accent-blue-dark);
+    border-radius: 4px;
+    padding: 3px 6px;
+    border: 1px solid var(--accent-blue-dark);
+    transform: scale(1.05);
+    transition: 300ms;
+}
+.btn-type2{
+    background: var(--accent-blue-dark);
+    color: white;
+    border-radius: 4px;
+    padding: 3px 6px;
+    border-color: var(--accent-blue-dark);
+    transform: scale(1.05);
+    transition: 300ms;
+}
+.circular-btn{
+    background: transparent;
+    border: 1px solid var(--accent-blue-dark);
+    width: 2rem;
+    height: 2rem;
+    border-radius: 1rem;
+    flex-shrink: 0;
+    color: var(--accent-blue-dark);
+    margin: 0 0.5rem;
+    transform: scale(1.05);
+    transition: 300ms;
+}
+.circular-btn:hover{
+    color: white;
+    background: var(--accent-blue-dark);
+}
+.circular-btn:active{
+    transform: scale(0.95);
+}
+
+body{
+    background: rgb(17, 17, 24);
+}
+header{
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3rem;
+    border-bottom: 1px solid var(--border-gray);
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+}
+
+#logo{
+    height: 2rem;
+    margin: 0 1rem 0 3.5rem;
+}
+
+#filechooser{
+    margin: 0 0.5rem;
+}
+#filechooser option{
+    background: var(--dark-workspace-bg);
+}
+#filename{
+    margin: 0 1.5rem;
+    font-weight: bold;
+    display: inline-flex;
+    width: 100%;
+}
+
+#run-btn{
+    background: var(--accent-green-translucent);
+    color: var(--accent-green);
+    border: var(--accent-green-translucent);
+}
+#run-btn:hover{
+    background: var(--accent-green);
+    color: white;
+    box-shadow: 0 0 0 0.2rem var(--accent-green-translucent);
+}
+main{
+    position: fixed;
+    top: 3rem;
+    bottom: 1.5rem;
+    left: 0;
+    width: 70%;
+    background-color: rgb(25, 30, 35);
+    border-right: 1px solid var(--border-gray);
+}
+aside{
+    position: fixed;
+    top: 3rem;
+    bottom: 1.5rem;
+    right: 0;
+    width: 30%;
+    border-left: 1px solid var(--border-gray);
+}
+.panel-title{
+    height: 1.8rem;
+    width: 100%;
+    background: var(--mode-color);
+    position: sticky;
+    top: 0;
+    left: 0;
+    right: 0;
+    display: flex;
+    align-items: center;
+    font-family: var(--roboto);
+    padding: 0 10px;
+}
+#inputs-container{
+    height: 30%;
+    width: 100%;
+    position: relative;
+}
+#inputs{
+    padding: 10px;
+    font-family: 'Courier New', Courier, monospace !important;
+    background: inherit;
+    color: white;
+    border: none;
+    resize: none;
+    width: 100%;
+    height: calc(100% - 1.8rem);
+}
+#inputs:focus{
+    outline: none;
+}
+#console-container {
+    height: 70%;
+    position: relative;
+    overflow-y: auto;
+    width: 100%;
+    border-top: 1px solid var(--border-gray);
+}
+#console{
+    height: calc(100% - 1.8rem);
+    padding: 10px;
+    font-family: 'Courier New', Courier, monospace !important;
+}
+#clr-console{
+    position: absolute;
+    top: 0.1rem;
+    right: 0.1rem;
+    height: 1.6rem;
+    color: rgb(255, 0, 0);
+    background-color: rgba(255, 0, 0, 0.1);
+    width: 4rem;
+    font-size: 13px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: 300ms;
+    border: 1px solid red;
+}
+#clr-console:hover{
+    background-color: rgba(255, 0, 0, 0.3);
+}
+footer{
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 1.5rem;
+    background: var(--dark-workspace-bg);
+    border-top: 1px solid var(--border-gray);
+}
+
+#editor_wrapper {
+    padding: 5px;
+    background-color: #272b36;
+    height: 100%;
+  }
+
+  .CodeMirror {
+    font-size: 16px;
+    letter-spacing: 1px;
+    font-weight: 500;
+    line-height: 25px;
+    font-family: monospace !important;
+    height: 100% !important;
+
+  }
+
+#hamburger{
+    position: fixed;
+    height: 3rem;
+    z-index: 10;
+}
+
+#sidebar{
+    z-index: 5;
+    position: fixed;
+    top: 0;
+    max-width: 100vw;
+    width: 20rem;
+    left: 0;
+    bottom: 0;
+    background: var(--dark-workspace-bg-translucent);
+    backdrop-filter: blur(20px);
+    border-right: 1px solid var(--border-gray);
+    box-shadow: 0.5rem 0 1rem rgba(0,0,0,0.3);
+    transition: 300ms;
+}
+
+#sidebar.collapsed{
+    left: -20rem;
+}
+#sign-in-warner{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin-top: 3rem;
+    width: 100%;
+    height: calc(100% - 3rem);
+}
+#sign-in-warner.hidden{
+    display: none;
+}
+#sign-in-warner i.fa.icon{
+    font-size: 4rem;
+    color: var(--accent-blue-dark);
+    margin: 1rem 0;
+}
+#sign-in-warner .msg{
+    margin: 1rem 0;
+    color: #cccccc;
+}
+#sign-in-warner button{
+    margin: 1rem 0;
+    font-size: 13px;
+    padding: 0.3rem 0.5rem;
+    transition: 300ms;
+}
+#sign-in-warner button i{
+    margin-left: 0.4rem;
+}
+#sign-in-warner button:hover{
+    color: white;
+    background-color: var(--accent-blue-dark);
+}
+
+#files-container{
+    margin-top: 3rem;
+    width: 100%;
+    height: calc(100% - 3rem);
+    overflow-y: auto;
+}
+#files-container h1{
+    padding: 1.2rem;
+}
+#files-container ul{
+    width: 100%;
+    padding: 0.6rem;
+    list-style-type: none;
+}
+
+#files-container li{
+    padding: 0.6rem 0.6rem 0.6rem 0.8rem;
+    border-radius: 0.3rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    cursor: default;
+    transition: 300ms;
+    color: white;
+}
+
+#files-container li.current{
+    position: relative;
+}
+#files-container li.current::after{
+    position: absolute;
+    left: 0.2rem;
+    top: 0.3rem;
+    bottom: 0.3rem;
+    width: 0.2rem;
+    background: white;
+    border-radius: 0.1rem;
+    content: '';
+}
+
+#files-container li:hover{
+    background: rgba(100, 100, 100, 0.3);
+}
+#files-container li:active{
+    background: var(--accent-blue-dark);
+}
+.error{
+    color: red;
+}

@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+{% load static %}
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="{% static 'css/login.css'%}">
+</head>
+
+<body>
+    <div class="wrapper">
+        <div class="title-text">
+            <div class="login">
+                <h2>
+                    Reset Your Password
+                </h2>
+            </div>
+        </div>
+        <div class="form-container">
+            <div class="form-inner my-4">
+                <form method="post" class="login">
+                    {% csrf_token %}
+                    <label>Old Password</label>
+                    <div class="field">
+                        <input type="password" name="password" id="password" placeholder="Password" required>
+                    </div>
+                    <div class="field">
+                        <input type="password" name="password0" id="password0" placeholder="Password(Again)" required>
+                    </div>
+                    <label class="mt-2">New Password</label>
+                    <div class="field">
+                        <input type="password" name="newpassword" id="newpassword" placeholder="New Password" required>
+                    </div>
+                    <div class="field-btn" style="margin-top:15px;">
+                        <input type="checkbox" id="showPassword" onchange="showPass(this)" unchecked> Show Password
+                        </input>
+                    </div>
+                    <div class="field btn mt-2">
+                        <div class="btn-layer"></div>
+                        <input type="submit" name="reset" value="Reset">
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</body>
+<script>
+    function showPass(checkbox) {
+        if (checkbox.checked == true) {
+            document.getElementById("password").type = "text"
+            document.getElementById("password0").type = "text"
+            document.getElementById("newpassword").type = "text"
+        } else {
+            document.getElementById("password").type = "password"
+            document.getElementById("password0").type = "password"
+            document.getElementById("newpassword").type = "password"
+        }
+    }
+</script>
+
+</html>

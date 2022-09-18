@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+{% load static %}
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  <link href="/static/css/hamburgers.css" rel="stylesheet">
+  <link rel="stylesheet" href="/static/css/style.css">
+  <link rel="stylesheet" href="/static/css/base.css">
+  <link rel="stylesheet" href="/static/css/popup.css">
+
+  <title>Codeware - Untitled.py</title>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/6.65.7/codemirror.min.js"
+    integrity="sha512-8RnEqURPUc5aqFEN04aQEiPlSAdE0jlFS/9iGgUyNtwFnSKCXhmB6ZTNl7LnDtDWKabJIASzXrzD0K+LYexU9g=="
+    crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/6.65.7/codemirror.min.css"
+    integrity="sha512-uf06llspW44/LZpHzHT6qBOIVODjWtv4MxCricRxkzvopAlSWnTf6hpZTFxuuZcuNE9CBQhqE0Seu1CoRk84nQ=="
+    crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/6.65.7/theme/dracula.min.css"
+    integrity="sha512-gFMl3u9d0xt3WR8ZeW05MWm3yZ+ZfgsBVXLSOiFz2xeVrZ8Neg0+V1kkRIo9LikyA/T9HuS91kDfc2XWse0K0A=="
+    crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/6.65.7/mode/python/python.min.js"
+    integrity="sha512-2M0GdbU5OxkGYMhakED69bw0c1pW3Nb0PeF3+9d+SnwN1ryPx3wiDdNqK3gSM7KAU/pEV+2tFJFbMKjKAahOkQ=="
+    crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/6.65.7/addon/edit/closebrackets.min.js"
+    integrity="sha512-tsjcYO5hFvViRssxiM7Jhd8601epWOx1He3Hl4yuI5dKKPxr43KxkOhc9GZeeqzlYJm9ABb7UPA9697NiqZZ7Q=="
+    crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/6.65.7/addon/edit/closetag.min.js"
+    integrity="sha512-XYx5xhl4B5vKNlaRBWh/nlti0+IPM6eT+dSFc3/oc4rERn2DpwbS3q4OblprqqBLXyRSVePKmf+8mHkDLtGZpg=="
+    crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+</head>
+
+<body>
+  <button class="hamburger hamburger--arrow" id="hamburger">
+    <span class="hamburger-box">
+      <span class="hamburger-inner"></span>
+    </span>
+  </button>
+  <form method="post" action="/save">
+    {% csrf_token %}
+    <header>
+
+      <a href="/">
+        <img src="{%static 'assets/logo.svg'%}" id="logo">
+      </a>
+      <div id="filename">Untitled.py</div>
+
+      <select name="lang" id="filechooser" class="btn-type1">
+        <option value="py">Python</option>
+        <option value="js">JavaScript</option>
+        <option value="c">C</option>
+        <option value="cpp">C++</option>
+        <option value="dart">Dart</option>
+        <option value="java">Java</option>
+      </select>
+
+      <button class="circular-btn" id="run-btn" type="button"><i class="fa fa-play"></i></button>
+      <button class="circular-btn" id="save-btn"><i class="fa fa-floppy-o"></i></button>
+      <input id="import-file" type="file" accept=".py, .cpp, .c, .dart, .js" onchange="readFile(this)" hidden>
+      <label for="import-file" class="circular-btn d-flex">
+        <i class="fa fa-upload m-auto"></i>
+      </label>
+      <input id="form-submit" type="submit" hidden>
+      <input id="form-filename" name="filename" type="text" hidden>
+
+    </header>
+    <main>
+      <div id="editor_wrapper">
+        <textarea name="code" id="editor">print("hello world !")</textarea>
+      </div>
+
+    </main>
+  </form>
+  <aside id="terminal">
+    <div id="inputs-container">
+      <div class="panel-title">Inputs</div>
+      <textarea name="stdin" id="inputs"></textarea>
+    </div>
+    <div id="console-container">
+      <div class="panel-title">Console<button id="clr-console">Clear</button></div>
+      <div id="console"></div>
+    </div>
+  </aside>
+  <footer></footer>
+
+
+  <div id="sidebar" class="collapsed">
+
+    {% if not auth %}
+    <div id="sign-in-warner">
+      <i class="fa fa-info-circle icon"></i>
+      <span class="msg">Sign up / Sign in to see your files.</span>
+      <a href="/accounts/login" target="_blank">
+        <button class="btn-type1">Proceed<i class="fa fa-chevron-right"></i></button>
+      </a>
+    </div>
+    {% else %}
+    <div id="files-container">
+      <h1>Files</h1>
+      <ul>
+        {% for k in user_files %}
+        <a href="/open/{{k}}">
+          <li>{{k}}</li>
+        </a>
+        {% endfor %}
+      </ul>
+    </div>
+    {% endif %}
+  </div>
+  <div id="popup_box">
+    <h2>Save</h2>
+    <input type="text" id="popup_input" placeholder="Enter you file name" value="Untitled" />
+    <div id="wrapbox">
+      <button class="popup_btn" style="background-color: rgb(255, 255, 255, 0.3); color: white;;">Cancel</button>
+      <button class="popup_btn" onClick="save()" style="color: white; background-color: rgb(65, 157, 255)">
+        Save
+      </button>
+    </div>
+  </div>
+  <div id="blur-underlay"></div>
+</body>
+
+
+<script>
+  let lang_dic = {
+    python: `print("hello world")`,
+    "c++": `#include <iostream>
+using namespace std;
+
+int main() {
+  cout << "Hello World!";
+  return 0;
+}`,
+    c: `#include <stdio.h>
+
+int main() {
+  printf("Hello World!");
+  return 0;
+}`,
+    javascript: `console.log("hello wold");`,
+    dart: `void main(){
+  print("Hello World");
+}`,
+    java: `class Simple{  
+  public static void main(String args[]){  
+    System.out.println("Hello Java");  
+  }  
+}`,
+  };
+
+  var editor = CodeMirror.fromTextArea(document.getElementById("editor"), {
+    mode: "python",
+    theme: "dracula",
+    lineNumbers: true,
+    autoCloseTags: true,
+    autoCloseBrackets: true,
+  });
+
+  var con = editor.getValue();
+  console.log(con);
+
+  const select = document.getElementById("filechooser");
+
+  select.addEventListener("change", (event) => {
+    if (event.target.value === "py") {
+      editor.setValue(lang_dic["python"]);
+    } else if (event.target.value === "js") {
+      editor.setValue(lang_dic["javascript"]);
+    } else if (event.target.value === "c") {
+      editor.setValue(lang_dic["c"]);
+    } else if (event.target.value === "cpp") {
+      editor.setValue(lang_dic["c++"]);
+    } else if (event.target.value === "dart") {
+      editor.setValue(lang_dic["dart"]);
+    } else if (event.target.value === "java") {
+      editor.setValue(lang_dic["java"]);
+    }
+  });
+
+  function _format(text_) {
+    text_ = text_.slice(1, -1);
+    text_ = text_.replaceAll(String.raw `\n`, "<br>");
+    text_ = text_.replaceAll(String.raw `\t`, "&nbsp;&nbsp;");
+    text_ = text_.replaceAll(String.raw `\r`, "");
+    return text_;
+  }
+
+  submit_btn = document.getElementById('run-btn');
+  submit_btn.addEventListener("click", function () {
+    var csrf = document.getElementsByName("csrfmiddlewaretoken")[0];
+    csrf = csrf.value;
+    data = new FormData();
+    data.append('lang', document.getElementById('filechooser').value);
+    data.append('stdin', document.getElementById('inputs').value);
+    data.append('code', editor.getValue());
+    // console.log(csrf);
+    var xhr = new XMLHttpRequest();
+    xhr.open('POST', '/compile', true);
+    xhr.setRequestHeader('X-CSRFToken', csrf);
+    xhr.getResponseHeader('Content-type', 'application/json');
+    xhr.onload = function () {
+      if (this.status === 200) {
+        //var text_ = _format(xhr.responseText);
+        document.getElementById('console').classList.remove("error");
+        document.getElementById('console').innerHTML = _format(xhr.responseText);
+      } else if (this.status === 400) {
+        console.warn(xhr.responseText);
+        document.getElementById('console').classList.add("error");
+        document.getElementById('console').innerHTML = _format(xhr.responseText);
+      } else {
+        console.log("Some error occured");
+      }
+    }
+    xhr.send(data);
+    return xhr.responseText;
+  })
+</script>
+<script>
+  save_btn = document.getElementById("save-btn");
+  save_btn.addEventListener("click", function (evt) {
+    evt.preventDefault();
+    saveDialog();
+  });
+
+  function save() {
+    document.getElementById("form-filename").value = document.getElementById("popup_input").value
+    document.getElementById("form-submit").click();
+  }
+</script>
+<script>
+  function readFile(input) {
+    let file = input.files[0];
+
+    let reader = new FileReader();
+
+    reader.readAsText(file);
+
+    reader.onload = function () {
+      editor.setValue(reader.result);
+    };
+
+    reader.onerror = function () {
+      console.log(reader.error);
+    };
+  }
+</script>
+<script src="/static/js/hamburger.js"></script>
+<script src="/static/js/console.js"></script>
+<script src="/static/js/popup.js"></script>
+
+</html>

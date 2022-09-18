@@ -1,0 +1,28 @@
+<html>
+    <head>
+        <title>Sign In</title>
+        <link rel="stylesheet" href="css/login.css">
+    </head>
+    <body>
+        <div class="wrapper">
+                <div class="title-text">
+                    <div class="title signup">
+                        Change Email
+                    </div>
+                </div>
+                <div class="form-container">
+                    <div class="form-inner">
+                        <form method="post" class="signup">
+                            <!-- {%csrf_token%} -->
+                            <div class="field my-5">
+                                <input type="text" name="email" placeholder="Email" required>
+                            </div>
+                            <div class="field btn mt-5">
+                                <input class="btn-layer" type="submit" name="submit" value="Confirm">
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+    </body>
+</html>
