@@ -56,7 +56,6 @@
         <option value="c">C</option>
         <option value="cpp">C++</option>
         <option value="dart">Dart</option>
-        <option value="java">Java</option>
       </select>
 
       <button class="circular-btn" id="run-btn" type="button"><i class="fa fa-play"></i></button>
@@ -146,11 +145,6 @@ int main() {
     dart: `void main(){
   print("Hello World");
 }`,
-    java: `class Simple{  
-  public static void main(String args[]){  
-    System.out.println("Hello Java");  
-  }  
-}`,
   };
 
   var editor = CodeMirror.fromTextArea(document.getElementById("editor"), {
@@ -177,8 +171,6 @@ int main() {
       editor.setValue(lang_dic["c++"]);
     } else if (event.target.value === "dart") {
       editor.setValue(lang_dic["dart"]);
-    } else if (event.target.value === "java") {
-      editor.setValue(lang_dic["java"]);
     }
   });
 
