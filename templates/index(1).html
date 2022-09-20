@@ -101,13 +101,21 @@
     {% else %}
     <div id="files-container">
       <h1>Files</h1>
-      <ul>
+      <ul style="overflow-y:auto">
         {% for k in user_files %}
         <a href="/open/{{k}}">
           <li>{{k}}</li>
         </a>
         {% endfor %}
       </ul>
+      <div style="position:absolute;bottom:0;padding:1rem;justify-content:space-between;" class="d-flex">
+        <div>
+          <h3>{{username}}</h3>
+        </div>
+        <div><a class="btn" href="/accounts/logout">
+            Logout
+          </a></div>
+      </div>
     </div>
     {% endif %}
   </div>
@@ -184,6 +192,9 @@ int main() {
 
   submit_btn = document.getElementById('run-btn');
   submit_btn.addEventListener("click", function () {
+    submit_btn.disabled = true;
+    clrscr();
+    consoleElement.innerHTML = "<div class='loader m-auto'></div>";
     var csrf = document.getElementsByName("csrfmiddlewaretoken")[0];
     csrf = csrf.value;
     data = new FormData();
@@ -198,10 +209,12 @@ int main() {
     xhr.onload = function () {
       if (this.status === 200) {
         //var text_ = _format(xhr.responseText);
+        submit_btn.disabled = false;
         document.getElementById('console').classList.remove("error");
         document.getElementById('console').innerHTML = _format(xhr.responseText);
       } else if (this.status === 400) {
         console.warn(xhr.responseText);
+        submit_btn.disabled = false;
         document.getElementById('console').classList.add("error");
         document.getElementById('console').innerHTML = _format(xhr.responseText);
       } else {

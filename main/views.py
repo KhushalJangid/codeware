@@ -24,7 +24,7 @@ def home(request):
         BASE = Path(path.abspath(__file__)).parent.parent
         user = request.user
         user_files = path.join(BASE,'media',user.email)
-        print(listdir(user_files))
+        ctx['username'] = f'{user.first_name} {user.last_name}'
         ctx["user_files"] = listdir(user_files)
         return render(request,'index(1).html',ctx)
 
@@ -48,14 +48,20 @@ def compile(request):
             _output  = subprocess.run(["node",_fileloc],input=stdin.encode('utf-8'),timeout=5,capture_output=True)
             remove(_fileloc)
         elif lang == "cpp": 
-            _output  = subprocess.call(["g++",_fileloc],timeout=5)
-            _output = subprocess.run([f'./a.out'],input=stdin.encode('utf-8'),timeout=5,capture_output=True)
+            _output  = subprocess.run(["g++",_fileloc],timeout=5,capture_output=True)
             remove(_fileloc)
+            if _output.returncode != 0:
+                ctx = _output.stderr.decode('utf-8')
+                return Response(ctx,status=status.HTTP_400_BAD_REQUEST)
+            _output = subprocess.run([f'./a.out'],input=stdin.encode('utf-8'),timeout=5,capture_output=True)
             remove('./a.out')
         elif lang == "c": 
-            _output  = subprocess.call(["gcc",_fileloc],timeout=5)
-            _output = subprocess.run([f'./a.out'],input=stdin.encode('utf-8'),timeout=5,capture_output=True)
+            _output  = subprocess.run(["gcc",_fileloc],timeout=5,capture_output=True)
             remove(_fileloc)
+            if _output.returncode != 0:
+                ctx = _output.stderr.decode('utf-8')
+                return Response(ctx,status=status.HTTP_400_BAD_REQUEST)
+            _output = subprocess.run([f'./a.out'],input=stdin.encode('utf-8'),timeout=5,capture_output=True)
             remove('./a.out')
         elif lang == "dart": 
             _output  = subprocess.run(["dart",_fileloc],input=stdin.encode('utf-8'),timeout=5,capture_output=True)
@@ -63,8 +69,8 @@ def compile(request):
         else:
             return Response('Language not supported.',status=status.HTTP_403_FORBIDDEN)
     except Exception as e:
-        print(e.__str__())
-        return Response(e.__str__(),status=status.HTTP_400_BAD_REQUEST)
+        print("Error : ",e.__str__())
+        return Response(f'Error : {e.__str__()}',status=status.HTTP_400_BAD_REQUEST)
     ctx = _output.stdout.decode('utf-8')
     if _output.returncode != 0:
         ctx = _output.stderr.decode('utf-8')
