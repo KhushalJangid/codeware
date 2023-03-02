@@ -68,6 +68,7 @@ The following tools were used in this project:
 ## :white_check_mark: Requirements ##
 
 Before starting :checkered_flag:, you need to have [Git](https://git-scm.com) and [Python](https://python.org/) installed.
+It also requires compilers for supported languages [C/C++, JavaScript, Java, Python, Dart] on the local machine to compile the code.
 
 ## :checkered_flag: Starting ##
 
