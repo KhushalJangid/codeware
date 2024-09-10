@@ -11,13 +11,8 @@ from accounts.verify import get_otp, send_otp
 def loginUser(request):
     if request.method == "POST":
         email = request.POST.get("email")
-        try:
-            user = User.objects.get(email=email)
-        except Exception as e:
-            messages.error(request,'Email not registered. Please signin first.')
-            return render(request, "accounts/login.html")
         password = request.POST.get("password")
-        user = authenticate(id=user.id, password=password)
+        user = authenticate(email=email, password=password)
         if user is not None:
             login(request, user)
             return redirect("/")
@@ -30,29 +25,6 @@ def loginUser(request):
         return render(request, "accounts/login.html")
 
 def signin(request):
-    
-    # if request.method == "POST" and 'verify' in request.POST:
-    #     otp = request.POST.get('otp')
-    #     try:
-    #         OTP = request.session['otp']
-    #         start = request.session['instance']
-    #     except KeyError:
-    #         return redirect("/account/signup")
-    #     if OTP == otp:
-    #         if (perf_counter()-start) <= 600:
-    #             uid = request.session['uid']
-    #             user = User.objects.get(id=uid)
-    #             user.is_active = True
-    #             user.save()
-    #             login(request, user,
-    #                   backend='django.contrib.auth.backends.ModelBackend')
-    #             return redirect("/")
-    #         else:
-    #             messages.error(request,"OTP expired")
-    #             return redirect("/account/signin")
-    #     else:
-    #         messages.error(request,'OTP does not match')
-    #         return render(request, 'accounts/verify.html')
     if request.method == "POST":
         name = request.POST.get("name")
         email = request.POST.get("email")
@@ -62,7 +34,9 @@ def signin(request):
         if password == password0:
             try :
                 user = User.objects.create_user(first_name=name[0], last_name=name[-1],
-                                            email=email, password=password, is_active=False)
+                                            email=email, password=password, is_active=True)
+                login(request, user)
+                return redirect('/')
             except Exception as e:
                 print(e)
                 user = User.objects.get(email=email)
@@ -71,14 +45,8 @@ def signin(request):
                     return redirect("/accounts/signup")
                 user.is_active = True
                 user.save()
+                login(request, user)
                 return redirect("/")
-            # # user.save()
-            # OTP = get_otp()
-            # send_otp(email, OTP,f'{name[0]} {name[-1]}')
-            # request.session['uid'] = user.id
-            # request.session['otp'] = OTP
-            # request.session['instance'] = perf_counter()
-            # return render(request, 'accounts/verify.html')
         else:
             messages.error(request, 'Your Password Does not match.')
             return redirect("/accounts/signup")

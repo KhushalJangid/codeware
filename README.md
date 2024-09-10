@@ -24,14 +24,6 @@
   <img alt="Github stars" src="https://img.shields.io/github/stars/KhushalJangid/codeware?color=56BEB8" />
 </p>
 
-<!-- Status -->
-
-<!-- <h4 align="center"> 
-	🚧  FaceSearch 🚀 Under construction...  🚧
-</h4> 
-
-<hr> -->
-
 <p align="center">
   <a href="#dart-about">About</a> &#xa0; | &#xa0; 
   <a href="#sparkles-features">Features</a> &#xa0; | &#xa0;
@@ -46,15 +38,15 @@
 
 ## :dart: About ##
 
-This is an online code editor that works on django(python) in backend.
+This is an online code editor that works on Django(Python) in backend, Made for Tech-a-Thon 2022 at JECRC University. Supports C, C++, Python, JS, Dart programming languages
 
 ## :sparkles: Features ##
 
-:heavy_check_mark: Write & Edit code online;\
-:heavy_check_mark: Compile code on the go;\
-:heavy_check_mark: Open & Edit local code files;\
-:heavy_check_mark: Save code to local machine;\
-:heavy_check_mark: Save your code files on the server;
+:heavy_check_mark: Write & Edit code online\
+:heavy_check_mark: Compile code on the go\
+:heavy_check_mark: Open & Edit local code files\
+:heavy_check_mark: Download code files to your local machine\
+:heavy_check_mark: Cloud Save for files on the server
 
 ## :rocket: Technologies ##
 
@@ -62,13 +54,13 @@ The following tools were used in this project:
 
 - [Django](https://djangoproject.com/)
 - [Python](https://python.org)
-- [SQLite](https://sqlite.org/)
+- [HTML](https://developer.mozilla.org/en-US/docs/Web/HTML)
 
 
 ## :white_check_mark: Requirements ##
 
 Before starting :checkered_flag:, you need to have [Git](https://git-scm.com) and [Python](https://python.org/) installed.
-It also requires compilers for supported languages [C/C++, JavaScript, Java, Python, Dart] on the local machine to compile the code.
+It also requires compilers for supported languages [C/C++, JavaScript, Java, Python, Dart] on the local machine to compile the code (if docker is not used).
 
 ## :checkered_flag: Starting ##
 
@@ -80,6 +72,7 @@ $ git clone https://github.com/KhushalJangid/codeware
 $ cd codeware
 
 # Activate any virtual environment (if any)
+
 # Install dependencies
 $ pip install -r requirements.txt
 
@@ -89,9 +82,27 @@ $ python manage.py runserver
 # The server will initialize in the <http://localhost:8000>
 ```
 
-<!--## :memo: License ##
+Alternatively, Run using docker (No need to have compilers on local machine):
 
-This project is under license from MIT. For more details, see the [LICENSE](LICENSE.md) file.-->
+```bash
+# Clone this project
+$ git clone https://github.com/KhushalJangid/codeware
+
+# Access
+$ cd codeware
+
+# Build Docker image
+$ docker image build -t codeware .
+
+# Run Docker container
+$ docker run -p 8000:8000 codeware
+
+# The server will initialize in the <http://localhost:8000>
+```
+
+## :memo: License ##
+
+This project is under license from MIT. For more details, see the [LICENSE](LICENSE) file.
 
 
 Made with :heart: by <a href="https://github.com/KhushalJangid" target="_blank">Khushal Jangid</a> & <a href="https://github.com/satyam-mishra-pce" target="_blank">Satyam Mishra</a> 
