@@ -13,7 +13,7 @@
     --accent-green: rgb(34, 193, 74);
     --accent-green-translucent: rgba(34, 193, 74, 0.2);
     --mode-color: rgb(0,0,0);
-
+    --tab-color:rgb(18, 20, 23);
     --roboto: Arial, Helvetica, sans-serif;
 }
 html, body{
@@ -64,6 +64,39 @@ a:hover{
 }
 .circular-btn:active{
     transform: scale(0.95);
+}
+
+.tab-bar{
+    padding: 0.2rem;
+    overflow: auto;
+    border-bottom: 1px solid var(--border-gray);
+    background-color: var(--mode-color);
+}
+
+.tab-bar button{
+    padding: 0.4rem 1rem;
+    border: none;
+    border-radius: 0.3rem;
+    color: white;
+    cursor: pointer;
+    background-color: transparent;
+}
+
+.tab{
+    margin:0rem 0.2rem;
+    padding:0.4rem 0.8rem;
+    width: 10rem;
+    display: flex;
+    justify-content: space-between;
+    background-color: var(--dark-workspace-bg);
+}
+.tab button{
+    padding: 0.2rem;
+    border: none;
+    border-radius: 0.3rem;
+    color: white;
+    cursor: pointer;
+    background-color: transparent;
 }
 
 body{
@@ -197,7 +230,7 @@ footer{
     border-top: 1px solid var(--border-gray);
 }
 
-#editor_wrapper {
+.editor_wrapper {
     padding: 5px;
     background-color: #272b36;
     height: 100%;

@@ -10,6 +10,16 @@ from uuid import uuid4
 # from accounts.models import User
 # Create your views here.
 
+BASE = Path(path.abspath(__file__)).parent.parent
+
+def writeFile(request,filename):
+    code = request.POST.get('code')
+    _fileloc =  path.join(BASE,"media",filename)
+    with open(_fileloc, 'w') as fp:
+        fp.write(r'{}'.format(code))
+        fp.close()
+    return _fileloc
+
 def isAuthenticated(request):
     if request.user.is_anonymous:
         return {"auth":False}
@@ -31,23 +41,26 @@ def home(request):
 @api_view(['POST'])
 def compile(request):   
     lang = request.POST.get('lang')
-    code = request.POST.get('code')
     stdin = request.POST.get('stdin')
-    BASE = Path(path.abspath(__file__)).parent.parent
-    _filename = f'test_{uuid4()}.{lang}'
-    _fileloc = path.join(BASE,"media",_filename)
-    with open(_fileloc, 'w') as fp:
-        # fp.write(code)
-        fp.write(r'{}'.format(code))
-        fp.close()
+    # lang = request.POST.get('lang')
+    # code = request.POST.get('code')
+    # stdin = request.POST.get('stdin')
+    # _filename = f'test_{uuid4()}.{lang}'
+    # _fileloc = path.join(BASE,"media",_filename)
+    # with open(_fileloc, 'w') as fp:
+    #     fp.write(r'{}'.format(code))
+    #     fp.close()
     try :
         if lang == "py": 
+            _fileloc = writeFile(request,f'test_{uuid4()}.{lang}')
             _output  = subprocess.run(["python",_fileloc],input=stdin.encode('utf-8'),timeout=5,capture_output=True)
             remove(_fileloc)
         elif lang == "js": 
+            _fileloc = writeFile(request,f'test_{uuid4()}.{lang}')
             _output  = subprocess.run(["node",_fileloc],input=stdin.encode('utf-8'),timeout=5,capture_output=True)
             remove(_fileloc)
         elif lang == "cpp": 
+            _fileloc = writeFile(request,f'test_{uuid4()}.{lang}')
             _output  = subprocess.run(["g++",_fileloc],timeout=5,capture_output=True)
             remove(_fileloc)
             if _output.returncode != 0:
@@ -56,6 +69,7 @@ def compile(request):
             _output = subprocess.run([f'./a.out'],input=stdin.encode('utf-8'),timeout=5,capture_output=True)
             remove('./a.out')
         elif lang == "c": 
+            _fileloc = writeFile(request,f'test_{uuid4()}.{lang}')
             _output  = subprocess.run(["gcc",_fileloc],timeout=5,capture_output=True)
             remove(_fileloc)
             if _output.returncode != 0:
@@ -63,7 +77,18 @@ def compile(request):
                 return Response(ctx,status=status.HTTP_400_BAD_REQUEST)
             _output = subprocess.run([f'./a.out'],input=stdin.encode('utf-8'),timeout=5,capture_output=True)
             remove('./a.out')
+        elif lang == "java":
+            _fileloc = writeFile(request,'Main.java')
+            _output  = subprocess.run(["javac",_fileloc],timeout=5,capture_output=True)
+            remove(_fileloc)
+            if _output.returncode != 0:
+                ctx = _output.stderr.decode('utf-8')
+                return Response(ctx,status=status.HTTP_400_BAD_REQUEST)
+            _output = subprocess.run(['java',"Main"],input=stdin.encode('utf-8'),timeout=5,
+                                     capture_output=True,cwd=path.join(BASE,"media"))
+            remove(f'{_fileloc[:-5]}.class')
         elif lang == "dart": 
+            _fileloc = writeFile(request,f'test_{uuid4()}.{lang}')
             _output  = subprocess.run(["dart",_fileloc],input=stdin.encode('utf-8'),timeout=5,capture_output=True)
             remove(_fileloc)
         else:
