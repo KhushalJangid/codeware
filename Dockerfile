@@ -1,5 +1,5 @@
 # Use a base image with all necessary compilers
-FROM python:3.11-slim
+FROM python:3.13-slim
 
 # Install OS dependencies and compilers
 RUN apt-get update && apt-get install -y \
@@ -7,22 +7,9 @@ RUN apt-get update && apt-get install -y \
     g++ \
     nodejs \
     npm \
-    curl \
-    unzip \
     python3 \
     python3-pip \
     && apt-get clean
-
-# Set environment variables for Dart
-ENV DART_SDK_VERSION=3.5.2 
-ENV DART_SDK_ARCH=arm64 
-
-# Download and install Dart ARM SDK
-RUN curl -o dart-sdk.zip https://storage.googleapis.com/dart-archive/channels/stable/release/$DART_SDK_VERSION/sdk/dartsdk-linux-$DART_SDK_ARCH-release.zip 
-RUN unzip dart-sdk.zip -d /usr/lib/ && rm dart-sdk.zip
-
-# Add Dart to PATH
-ENV PATH="/usr/lib/dart-sdk/bin:$PATH"
 
 # Set the working directory
 WORKDIR /app
@@ -31,7 +18,8 @@ WORKDIR /app
 COPY . .
 
 # Install Python dependencies
-RUN pip install -r requirements.txt
+RUN pip install poetry
+RUN poetry install
 
 # Collect static files (optional)
 # RUN python manage.py collectstatic --noinput

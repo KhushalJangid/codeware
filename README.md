@@ -30,6 +30,7 @@
   <a href="#rocket-technologies">Technologies</a> &#xa0; | &#xa0;
   <a href="#white_check_mark-requirements">Requirements</a> &#xa0; | &#xa0;
   <a href="#checkered_flag-starting">Starting</a> &#xa0; | &#xa0;
+  <a href="#fireworks-screenshots">Screenshots</a> &#xa0; | &#xa0;
   <a href="#memo-license">License</a> &#xa0; | &#xa0;
   <a href="https://github.com/KhushalJangid" target="_blank">Author</a>
 </p>
@@ -71,10 +72,20 @@ $ git clone https://github.com/KhushalJangid/codeware
 # Access
 $ cd codeware
 
-# Activate any virtual environment (if any)
+# Install dependencies
+$ python3 -m venv venv
 
 # Install dependencies
-$ pip install -r requirements.txt
+$ source venv/bin/activate
+
+# Install dependencies
+$ pip install poetry
+
+# Install dependencies
+$ poetry install
+
+# Run the project
+$ python manage.py migrate
 
 # Run the project
 $ python manage.py runserver
@@ -99,6 +110,12 @@ $ docker run -p 8000:8000 codeware
 
 # The server will initialize in the <http://localhost:8000>
 ```
+
+## :fireworks: Screenshots ##
+<img src="./screenshots/Screenshot1.png" alt="codeware" />
+<img src="./screenshots/Screenshot2.png" alt="codeware" />
+<img src="./screenshots/Screenshot3.png" alt="codeware" />
+<img src="./screenshots/Screenshot4.png" alt="codeware" />
 
 ## :memo: License ##
 
