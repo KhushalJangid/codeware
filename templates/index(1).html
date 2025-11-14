@@ -70,15 +70,8 @@
 
     </header>
     <main>
-      <div class="tab-bar d-flex" id="tab-bar">
-        <div class="tab" id="tab-0">
-          Untitled.py
-          <button type="button"><i class="fa fa-times"></i></button>
-        </div>
-        <button type="button" id="add-file"><i class="fa fa-plus"></i></button>
-      </div>
       <div class="editor_wrapper" id="wrapper-0">
-        <textarea name="code" id="editor-0">print("hello world !")</textarea>
+        <textarea name="code" id="editor">print("hello world !")</textarea>
       </div>
 
     </main>
@@ -140,12 +133,125 @@
   <div id="blur-underlay"></div>
 </body>
 
-<script src="{%static 'js/editor.js'%}"></script>
-<script src="{%static 'js/hamburger.js'%}"></script>
-<script src="{%static 'js/console.js'%}"></script>
-<script src="{%static '/js/popup.js'%}"></script>
-<script src="{%static '/js/run.js'%}"></script>
-<script src="{%static '/js/boilerplate.js'%}"></script>
-<script src="{%static '/js/load_file.js'%}"></script>
+
+<script>
+  let lang_dic = {
+    python: `print("hello world")`,
+    "c++": `#include <iostream>
+using namespace std;
+
+int main() {
+  cout << "Hello World!";
+  return 0;
+}`,
+    c: `#include <stdio.h>
+
+int main() {
+  printf("Hello World!");
+  return 0;
+}`,
+    javascript: `console.log("hello wold");`,
+    dart: `void main(){
+  print("Hello World");
+}`,
+  };
+
+  var editor = CodeMirror.fromTextArea(document.getElementById("editor"), {
+    mode: "python",
+    theme: "dracula",
+    lineNumbers: true,
+    autoCloseTags: true,
+    autoCloseBrackets: true,
+  });
+
+  var con = editor.getValue();
+  console.log(con);
+
+  const select = document.getElementById("filechooser");
+
+  select.addEventListener("change", (event) => {
+    if (event.target.value === "py") {
+      editor.setValue(lang_dic["python"]);
+    } else if (event.target.value === "js") {
+      editor.setValue(lang_dic["javascript"]);
+    } else if (event.target.value === "c") {
+      editor.setValue(lang_dic["c"]);
+    } else if (event.target.value === "cpp") {
+      editor.setValue(lang_dic["c++"]);
+    } else if (event.target.value === "dart") {
+      editor.setValue(lang_dic["dart"]);
+    }
+  });
+
+  function _format(text_) {
+    // text_ = text_.slice(1, -1);
+    text_ = text_.replaceAll(String.raw `\n`, "<br>");
+    text_ = text_.replaceAll(String.raw `\t`, "&nbsp;&nbsp;");
+    text_ = text_.replaceAll(String.raw `\r`, "");
+    return text_;
+  }
+
+  submit_btn = document.getElementById('run-btn');
+  submit_btn.addEventListener("click", function () {
+    var csrf = document.getElementsByName("csrfmiddlewaretoken")[0];
+    csrf = csrf.value;
+    data = new FormData();
+    data.append('lang', document.getElementById('filechooser').value);
+    data.append('stdin', document.getElementById('inputs').value);
+    data.append('code', editor.getValue());
+    // console.log(csrf);
+    var xhr = new XMLHttpRequest();
+    xhr.open('POST', '/compile', true);
+    xhr.setRequestHeader('X-CSRFToken', csrf);
+    xhr.getResponseHeader('Content-type', 'application/json');
+    xhr.onload = function () {
+      if (this.status === 200) {
+        //var text_ = _format(xhr.responseText);
+        document.getElementById('console').classList.remove("error");
+        document.getElementById('console').innerHTML = _format(xhr.responseText);
+      } else if (this.status === 400) {
+        console.warn(xhr.responseText);
+        document.getElementById('console').classList.add("error");
+        document.getElementById('console').innerHTML = _format(xhr.responseText);
+      } else {
+        console.log("Some error occured");
+      }
+    }
+    xhr.send(data);
+    return xhr.responseText;
+  })
+</script>
+<script>
+  save_btn = document.getElementById("save-btn");
+  save_btn.addEventListener("click", function (evt) {
+    evt.preventDefault();
+    saveDialog();
+  });
+
+  function save() {
+    document.getElementById("form-filename").value = document.getElementById("popup_input").value
+    document.getElementById("form-submit").click();
+  }
+</script>
+<script>
+  function readFile(input) {
+    let file = input.files[0];
+
+    let reader = new FileReader();
+
+    reader.readAsText(file);
+
+    reader.onload = function () {
+      editor.setValue(reader.result);
+    };
+
+    reader.onerror = function () {
+      console.log(reader.error);
+    };
+  }
+</script>
+<script src="/static/js/hamburger.js"></script>
+<script src="/static/js/console.js"></script>
+<script src="/static/js/popup.js"></script>
 
 </html>

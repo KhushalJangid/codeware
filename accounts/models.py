@@ -7,7 +7,7 @@ from django.contrib.auth.base_user import BaseUserManager
 class UserManager(BaseUserManager):
     use_in_migrations=True
 
-    def create_user(self,email=None,phone=None,password=None,**extra):
+    def create_user(self,email=None,password=None,**extra):
         if not email:
             raise ValueError('Email  is required')
         email = self.normalize_email(email)
@@ -33,8 +33,8 @@ class User(AbstractUser):
     email = models.EmailField(blank=True,null=True,unique=True)
     objects = UserManager()
 
-    USERNAME_FIELD='id'
-    REQUIRED_FIELDS=['email']
+    USERNAME_FIELD='email'
+    REQUIRED_FIELDS=[]
     def __str__(self):
         return f'{self.first_name} {self.last_name}'
     

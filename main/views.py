@@ -1,20 +1,19 @@
 from django.shortcuts import render,redirect
 import subprocess
-from os import path,remove,listdir
-from pathlib import Path
+from os import path,remove,listdir,makedirs
+from django.http.response import HttpResponseNotAllowed,HttpResponse,HttpResponseForbidden,HttpResponseBadRequest
 from rest_framework.decorators import api_view
 from django.contrib.auth.decorators import login_required
 from rest_framework.response import Response
 from rest_framework import status
 from uuid import uuid4
+from codeware.settings import BASE_DIR
 # from accounts.models import User
 # Create your views here.
 
-BASE = Path(path.abspath(__file__)).parent.parent
-
 def writeFile(request,filename):
     code = request.POST.get('code')
-    _fileloc =  path.join(BASE,"media",filename)
+    _fileloc =  path.join(BASE_DIR,"media",filename)
     with open(_fileloc, 'w') as fp:
         fp.write(r'{}'.format(code))
         fp.close()
@@ -28,12 +27,11 @@ def isAuthenticated(request):
 
 def home(request):
     ctx = isAuthenticated(request)
-    if ctx["auth"] == False:
+    if not ctx["auth"]:
         return render(request,'index(1).html',ctx)
     else:
-        BASE = Path(path.abspath(__file__)).parent.parent
         user = request.user
-        user_files = path.join(BASE,'media',user.email)
+        user_files = path.join(BASE_DIR,'media',user.email)
         ctx['username'] = f'{user.first_name} {user.last_name}'
         ctx["user_files"] = listdir(user_files)
         return render(request,'index(1).html',ctx)
@@ -85,7 +83,7 @@ def compile(request):
                 ctx = _output.stderr.decode('utf-8')
                 return Response(ctx,status=status.HTTP_400_BAD_REQUEST)
             _output = subprocess.run(['java',"Main"],input=stdin.encode('utf-8'),timeout=5,
-                                     capture_output=True,cwd=path.join(BASE,"media"))
+                                     capture_output=True,cwd=path.join(BASE_DIR,"media"))
             remove(f'{_fileloc[:-5]}.class')
         elif lang == "dart": 
             _fileloc = writeFile(request,f'test_{uuid4()}.{lang}')
@@ -103,50 +101,50 @@ def compile(request):
     return Response(ctx)
 
 @login_required()
-@api_view(['POST'])
-def save(request):   
-    lang = request.POST.get('lang')
-    code = request.POST.get('code')
-    print(code)
-    filename = request.POST.get('filename')
-    BASE = Path(path.abspath(__file__)).parent.parent
-    _filename = f'{filename}.{lang}'
-    _fileloc = path.join(BASE,"media",request.user.email,_filename)
-    if path.isfile(_fileloc):
-        _filename = f'{filename}(1).{lang}'
-        _fileloc = path.join(BASE,"media",request.user.email,_filename)
-    with open(_fileloc, 'w') as fp:
-        fp.write(code)
-        fp.close()
-    return redirect(f'/open/{_filename}')
+# @api_view(['POST'])
+def save(request):  
+    if request.method == 'POST': 
+        lang = request.POST.get('lang')
+        code = request.POST.get('code')
+        print(code)
+        filename = request.POST.get('filename')
+        _filename = f'{filename}.{lang}'
+        _fileloc = path.join(BASE_DIR,"media",request.user.email,_filename)
+        if path.isfile(_fileloc):
+            _filename = f'{filename}(1).{lang}'
+            _fileloc = path.join(BASE_DIR,"media",request.user.email,_filename)
+        with open(_fileloc, 'w') as fp:
+            fp.write(code)
+            fp.close()
+        return redirect(f'/open/{_filename}')
+    else:
+        return HttpResponseNotAllowed(['POST'])
 
 @login_required()
-@api_view(['POST'])
-def save_saved(request,filename):   
-    lang = request.POST.get('lang')
-    code = request.POST.get('code')
-    filename = filename.split('.')[0]
-    BASE = Path(path.abspath(__file__)).parent.parent
-    _filename = f'{filename}.{lang}'
-    _fileloc = path.join(BASE,"media",request.user.email,_filename)
-    # if path.isfile(_fileloc):
-    #     _filename = f'{filename}(1).{lang}'
-    #     _fileloc = path.join(BASE,"media",request.user.email,_filename)
-    with open(_fileloc, 'w') as fp:
-        fp.write(code)
-        fp.close()
-    return redirect(f'/open/{_filename}')
+# @api_view(['POST'])
+def save_saved(request,filename): 
+    if request.method == 'POST':  
+        lang = request.POST.get('lang')
+        code = request.POST.get('code')
+        filename = filename.split('.')[0]
+        _filename = f'{filename}.{lang}'
+        _fileloc = path.join(BASE_DIR,"media",request.user.email,_filename)
+        with open(_fileloc, 'w') as fp:
+            fp.write(code)
+            fp.close()
+        return redirect(f'/open/{_filename}')
+    else:
+        return HttpResponseNotAllowed(['POST'])
 
 @login_required()
 def open_file(request,filename):
     ctx = isAuthenticated(request)
-    BASE = Path(path.abspath(__file__)).parent.parent
-    _fileloc = path.join(BASE,"media",request.user.email,filename)
+    _fileloc = path.join(BASE_DIR,"media",request.user.email,filename)
     file = open(_fileloc, 'r')
     code = file.read()
     ctx["code"] = code
     user = request.user
-    user_files = path.join(BASE,'media',user.email)
+    user_files = path.join(BASE_DIR,'media',user.email)
     lst = listdir(user_files)
     lst.remove(filename)
     ctx["user_files"] = lst
