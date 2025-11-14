@@ -6,6 +6,8 @@ from django.contrib import messages
 from django.contrib.auth import logout, login, authenticate
 from accounts.models import User
 from accounts.verify import get_otp, send_otp
+from pathlib import Path
+from os import path,mkdir
 # Create your views here.
 
 def loginUser(request):
@@ -34,9 +36,12 @@ def signin(request):
         if password == password0:
             try :
                 user = User.objects.create_user(first_name=name[0], last_name=name[-1],
-                                            email=email, password=password, is_active=True)
+                                            email=email, password=password, is_active=False)
+                BASE = Path(path.abspath(__file__)).parent.parent
+                pth = path.join(BASE,'media',email)
+                mkdir(pth)
                 login(request, user)
-                return redirect('/')
+                return redirect("/")
             except Exception as e:
                 print(e)
                 user = User.objects.get(email=email)

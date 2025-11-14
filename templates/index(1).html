@@ -8,10 +8,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-  <link href="/static/css/hamburgers.css" rel="stylesheet">
-  <link rel="stylesheet" href="/static/css/style.css">
-  <link rel="stylesheet" href="/static/css/base.css">
-  <link rel="stylesheet" href="/static/css/popup.css">
+  <link rel="stylesheet" href="{% static 'css/hamburgers.css'%}">
+  <link rel="stylesheet" href="{% static 'css/style.css'%}">
+  <link rel="stylesheet" href="{% static 'css/base.css'%}">
+  <link rel="stylesheet" href="{% static 'css/popup.css'%}">
 
   <title>Codeware - Untitled.py</title>
 
@@ -52,9 +52,10 @@
 
       <select name="lang" id="filechooser" class="btn-type1">
         <option value="py">Python</option>
-        <option value="js">JavaScript</option>
         <option value="c">C</option>
         <option value="cpp">C++</option>
+        <option value="java">Java</option>
+        <option value="js">JavaScript</option>
         <option value="dart">Dart</option>
       </select>
 
@@ -69,7 +70,7 @@
 
     </header>
     <main>
-      <div id="editor_wrapper">
+      <div class="editor_wrapper" id="wrapper-0">
         <textarea name="code" id="editor">print("hello world !")</textarea>
       </div>
 
@@ -101,13 +102,21 @@
     {% else %}
     <div id="files-container">
       <h1>Files</h1>
-      <ul>
+      <ul style="overflow-y:auto">
         {% for k in user_files %}
         <a href="/open/{{k}}">
           <li>{{k}}</li>
         </a>
         {% endfor %}
       </ul>
+      <div style="position:absolute;bottom:0;padding:1rem;justify-content:space-between;width:100%" class="d-flex">
+        <div>
+          <h3>{{username}}</h3>
+        </div>
+        <div><a class="btn" href="/accounts/logout">
+            Logout
+          </a></div>
+      </div>
     </div>
     {% endif %}
   </div>
@@ -115,7 +124,7 @@
     <h2>Save</h2>
     <input type="text" id="popup_input" placeholder="Enter you file name" value="Untitled" />
     <div id="wrapbox">
-      <button class="popup_btn" style="background-color: rgb(255, 255, 255, 0.3); color: white;;">Cancel</button>
+      <button class="popup_btn" style="background-color: rgb(255, 255, 255, 0.3); color: white;">Cancel</button>
       <button class="popup_btn" onClick="save()" style="color: white; background-color: rgb(65, 157, 255)">
         Save
       </button>

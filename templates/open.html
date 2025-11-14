@@ -8,7 +8,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-  <link href="/static/css/hamburgers.css" rel="stylesheet">
+  <link rel="stylesheet" href="/static/css/hamburgers.css">
   <link rel="stylesheet" href="/static/css/style.css">
   <link rel="stylesheet" href="/static/css/base.css">
 
@@ -43,7 +43,6 @@
   <form action="/saveas/{{active}}" method="post">
     {% csrf_token %}
     <header>
-
       <a href="/">
         <img src="{%static 'assets/logo.svg'%}" id="logo">
       </a>
@@ -67,7 +66,7 @@
 
     </header>
     <main>
-      <div id="editor_wrapper">
+      <div class="editor_wrapper">
         <textarea name="code" id="editor">{{code}}</textarea>
       </div>
 
@@ -80,7 +79,7 @@
     </div>
     <div id="console-container">
       <div class="panel-title">Console<button id="clr-console">Clear</button></div>
-      <div id="console"></div>
+      <div id="console" class="d-flex"></div>
     </div>
   </aside>
   <footer></footer>
@@ -113,8 +112,6 @@
     {% endif %}
   </div>
 </body>
-
-
 <script>
   let lang_dic = {
     python: `print("hello world")`,
@@ -230,7 +227,12 @@ int main() {
 <script>
   document.getElementById("filechooser").value = "{{filetype}}";
 </script>
-<script src="/static/js/hamburger.js"></script>
-<script src="/static/js/console.js"></script>
+<script src="{%static 'js/editor.js'%}"></script>
+<script src="{%static 'js/hamburger.js'%}"></script>
+<script src="{%static 'js/console.js'%}"></script>
+<script src="{%static '/js/popup.js'%}"></script>
+<script src="{%static '/js/run.js'%}"></script>
+<script src="{%static '/js/boilerplate.js'%}"></script>
+<script src="{%static '/js/load_file.js'%}"></script>
 
 </html>
